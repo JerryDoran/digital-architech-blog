@@ -5,5 +5,12 @@ export const signUpSchema = z.object({
   email: z.email(),
   password: z
     .string()
-    .min(6, { message: 'Password must be at least 6 characters' }),
+    .min(8, { message: 'Password must be at least 8 characters' }),
+});
+
+export const signInSchema = z.object({
+  email: z.email(),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters' }),
 });
