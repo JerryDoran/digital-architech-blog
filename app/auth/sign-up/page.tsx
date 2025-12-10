@@ -1,5 +1,7 @@
 'use client';
 
+import { useTransition } from 'react';
+import { Loader } from 'lucide-react';
 import { signUpSchema } from '@/schemas/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { authClient } from '@/lib/auth-client';
@@ -25,7 +27,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 export default function SignUpPage() {
+  const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
+
   const form = useForm({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -35,20 +40,22 @@ export default function SignUpPage() {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof signUpSchema>) {
-    await authClient.signUp.email({
-      name: data.email,
-      email: data.email,
-      password: data.password,
-      fetchOptions: {
-        onSuccess: () => {
-          toast.success('Account created successfully');
-          router.push('/');
+  function onSubmit(data: z.infer<typeof signUpSchema>) {
+    startTransition(async () => {
+      await authClient.signUp.email({
+        name: data.email,
+        email: data.email,
+        password: data.password,
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success('Account created successfully');
+            router.push('/');
+          },
+          onError: (error) => {
+            toast.error(error.error.message);
+          },
         },
-        onError: (error) => {
-          toast.error(error.error.message);
-        },
-      },
+      });
     });
   }
 
@@ -113,8 +120,18 @@ export default function SignUpPage() {
                 </Field>
               )}
             />
-            <Button className='cursor-pointer hover:bg-white/70 transition'>
-              Sign Up
+            <Button
+              disabled={isPending}
+              className='cursor-pointer hover:bg-white/70 transition'
+            >
+              {isPending ? (
+                <>
+                  <Loader className='size-4 animate-spin' />
+                  <span>Creating account...</span>
+                </>
+              ) : (
+                <span>Sign Up</span>
+              )}
             </Button>
           </FieldGroup>
         </form>

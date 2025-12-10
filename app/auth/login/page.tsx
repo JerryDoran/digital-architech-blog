@@ -1,5 +1,6 @@
 'use client';
 
+import { useTransition } from 'react';
 import { signInSchema } from '@/schemas/auth';
 import { authClient } from '@/lib/auth-client';
 import z from 'zod';
@@ -23,9 +24,13 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Loader } from 'lucide-react';
 
 export default function LoginPage() {
+  const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
+
   const form = useForm({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -34,19 +39,21 @@ export default function LoginPage() {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof signInSchema>) {
-    await authClient.signIn.email({
-      email: data.email,
-      password: data.password,
-      fetchOptions: {
-        onSuccess: () => {
-          toast.success('Login successful');
-          router.push('/');
+  function onSubmit(data: z.infer<typeof signInSchema>) {
+    startTransition(async () => {
+      await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success('Login successful');
+            router.push('/');
+          },
+          onError: (error) => {
+            toast.error(error.error.message);
+          },
         },
-        onError: (error) => {
-          toast.error(error.error.message);
-        },
-      },
+      });
     });
   }
 
@@ -94,8 +101,18 @@ export default function LoginPage() {
                 </Field>
               )}
             />
-            <Button className='cursor-pointer hover:bg-white/70 transition'>
-              Sign In
+            <Button
+              disabled={isPending}
+              className='cursor-pointer hover:bg-white/70 transition'
+            >
+              {isPending ? (
+                <>
+                  <Loader className='size-4 animate-spin' />
+                  <span>Signing in...</span>
+                </>
+              ) : (
+                <span>Sign In</span>
+              )}
             </Button>
           </FieldGroup>
         </form>
