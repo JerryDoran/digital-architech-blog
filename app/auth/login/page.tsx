@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Loader } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   const [isPending, startTransition] = useTransition();
@@ -107,7 +107,7 @@ export default function LoginPage() {
             >
               {isPending ? (
                 <>
-                  <Loader className='size-4 animate-spin' />
+                  <Loader2 className='size-4 animate-spin' />
                   <span>Signing in...</span>
                 </>
               ) : (

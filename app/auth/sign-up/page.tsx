@@ -1,7 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
-import { Loader } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { signUpSchema } from '@/schemas/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { authClient } from '@/lib/auth-client';
@@ -126,7 +126,7 @@ export default function SignUpPage() {
             >
               {isPending ? (
                 <>
-                  <Loader className='size-4 animate-spin' />
+                  <Loader2 className='size-4 animate-spin' />
                   <span>Creating account...</span>
                 </>
               ) : (
