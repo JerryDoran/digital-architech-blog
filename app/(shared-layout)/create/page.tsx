@@ -31,7 +31,7 @@ import { Button } from '@/components/ui/button';
 export default function CreatePage() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const mutation = useMutation(api.posts.createPost);
+  const mutation = useMutation(api.posts.createPost); // automatically sends auth token to server for authentication
   const form = useForm({
     resolver: zodResolver(blogSchema),
     defaultValues: {
@@ -50,14 +50,15 @@ export default function CreatePage() {
       // });
 
       // using server action
-      await createBlogAction();
+      await createBlogAction(values);
       toast.success('Blog created successfully');
-      router.push('/');
 
       // using api call from client
       // await fetch('/api/create-blog', {
       //   method: 'POST',
       // });
+
+      // router.push('/');
     });
   }
 
