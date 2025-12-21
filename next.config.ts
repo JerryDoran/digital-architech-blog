@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'tough-oyster-215.convex.cloud',
+        port: '',
       },
     ],
   },

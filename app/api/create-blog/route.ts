@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { success } from 'zod';
 
 export async function POST() {
   // make sure to add authentication logic and validation logic

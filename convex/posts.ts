@@ -3,7 +3,11 @@ import { mutation, query } from './_generated/server';
 import { authComponent } from './auth';
 
 export const createPost = mutation({
-  args: { title: v.string(), content: v.string() },
+  args: {
+    title: v.string(),
+    content: v.string(),
+    imageStorageId: v.id('_storage'),
+  },
   handler: async (ctx, args) => {
     const user = await authComponent.safeGetAuthUser(ctx);
 
@@ -14,6 +18,7 @@ export const createPost = mutation({
       title: args.title,
       content: args.content,
       authorId: user._id,
+      imageStorageId: args.imageStorageId,
     });
 
     return blogArticle;
@@ -24,6 +29,49 @@ export const getPosts = query({
   args: {},
   handler: async (ctx) => {
     const posts = await ctx.db.query('posts').order('desc').collect();
-    return posts;
+    return await Promise.all(
+      posts.map(async (post) => {
+        console.log(post._id, post.imageStorageId);
+        const resolvedImageUrl = post.imageStorageId
+          ? await ctx.storage.getUrl(post.imageStorageId)
+          : null;
+        console.log(resolvedImageUrl);
+        return {
+          ...post,
+          imageUrl: resolvedImageUrl,
+        };
+      })
+    );
+  },
+});
+
+export const generateImageUploadUrl = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const user = await authComponent.safeGetAuthUser(ctx);
+
+    if (!user) {
+      throw new ConvexError('Unauthorized');
+    }
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+
+export const getPostDetails = query({
+  args: { postId: v.id('posts') },
+  handler: async (ctx, args) => {
+    const post = await ctx.db.get(args.postId);
+
+    if (!post) {
+      return null;
+    }
+    const resolvedImageUrl =
+      post?.imageStorageId !== undefined
+        ? await ctx.storage.getUrl(post.imageStorageId)
+        : null;
+    return {
+      ...post,
+      imageUrl: resolvedImageUrl,
+    };
   },
 });

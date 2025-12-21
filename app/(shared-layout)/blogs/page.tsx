@@ -8,7 +8,6 @@ import { useQuery } from 'convex/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { promise } from 'zod';
 
 export default async function BlogsPage() {
   // const data = useQuery(api.posts.getPosts);  // for client side data fetching
@@ -33,38 +32,47 @@ export default async function BlogsPage() {
 async function LoadBlogsList() {
   // await new Promise((resolve) => setTimeout(resolve, 5000));
   const data = await fetchQuery(api.posts.getPosts);
+  console.log(data);
+
   return (
     <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
-      {data?.map((post) => (
-        <Card key={post._id} className='pt-0'>
-          <div className='h-48 w-full overflow-hidden relative'>
-            <Image
-              src='https://images.unsplash.com/photo-1764377848067-aefbce306f80?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8'
-              alt={post.title}
-              fill
-              className='object-cover rounded-t-lg'
-            />
-          </div>
-          <CardContent>
-            <Link href={`/blogs/${post._id}`}>
-              <h2 className='text-2xl font-bold hover:text-primary transition-colors'>
-                {post.title}
-              </h2>
-            </Link>
-            <p className='text-muted-foreground line-clamp-3'>{post.content}</p>
-          </CardContent>
-          <CardFooter>
-            <Link
-              href={`/blogs/${post._id}`}
-              className={buttonVariants({
-                className: 'w-full',
-              })}
-            >
-              Read more
-            </Link>
-          </CardFooter>
-        </Card>
-      ))}
+      {data?.map((post) => {
+        return (
+          <Card key={post._id} className='pt-0'>
+            <div className='h-48 w-full overflow-hidden relative'>
+              <Image
+                src={
+                  post.imageUrl ??
+                  'https://images.unsplash.com/photo-1764377848067-aefbce306f80?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8'
+                }
+                alt={post.title}
+                fill
+                className='object-cover rounded-t-lg'
+              />
+            </div>
+            <CardContent>
+              <Link href={`/blogs/${post._id}`}>
+                <h2 className='text-2xl font-bold hover:text-primary transition-colors'>
+                  {post.title}
+                </h2>
+              </Link>
+              <p className='text-muted-foreground line-clamp-3'>
+                {post.content}
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Link
+                href={`/blogs/${post._id}`}
+                className={buttonVariants({
+                  className: 'w-full',
+                })}
+              >
+                Read more
+              </Link>
+            </CardFooter>
+          </Card>
+        );
+      })}
     </div>
   );
 }

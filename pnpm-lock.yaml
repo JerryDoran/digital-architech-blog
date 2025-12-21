@@ -7,7 +7,10 @@ settings:
 dependencies:
   '@convex-dev/better-auth':
     specifier: ^0.9.11
-    version: 0.9.11(better-auth@1.3.34)(convex@1.30.0)(react-dom@19.2.0)(react@19.2.0)(typescript@5.9.3)
+    version: 0.9.11(better-auth@1.3.34)(convex@1.29.3)(react-dom@19.2.0)(react@19.2.0)(typescript@5.9.3)
+  '@convex-dev/presence':
+    specifier: ^0.3.0
+    version: 0.3.0(convex@1.29.3)(react-dom@19.2.0)(react@19.2.0)
   '@hookform/resolvers':
     specifier: ^5.2.2
     version: 5.2.2(react-hook-form@7.68.0)
@@ -36,8 +39,8 @@ dependencies:
     specifier: ^2.1.1
     version: 2.1.1
   convex:
-    specifier: ^1.30.0
-    version: 1.30.0(react@19.2.0)
+    specifier: ^1.29.3
+    version: 1.29.3(react@19.2.0)
   lucide-react:
     specifier: ^0.556.0
     version: 0.556.0(react@19.2.0)
@@ -277,7 +280,7 @@ packages:
     resolution: {integrity: sha512-rEFOE1MYIsBmoMJtQbl32PGHHXuG2hDxvEd7rUHE0vCBoFQVSDqaVs9hkZEtHCxRoY+CljXKFCOuJ8uxqw1LcA==}
     dev: false
 
-  /@convex-dev/better-auth@0.9.11(better-auth@1.3.34)(convex@1.30.0)(react-dom@19.2.0)(react@19.2.0)(typescript@5.9.3):
+  /@convex-dev/better-auth@0.9.11(better-auth@1.3.34)(convex@1.29.3)(react-dom@19.2.0)(react@19.2.0)(typescript@5.9.3):
     resolution: {integrity: sha512-SZHuh/rgLxDydAG8fRMm6H6SECGt9FfgRMPR6/k+cR8MKsksr0YWvPhAVpe7hAwuuXAachP+9SqG/YIwBVNUZA==}
     peerDependencies:
       better-auth: 1.3.34
@@ -287,8 +290,8 @@ packages:
     dependencies:
       better-auth: 1.3.34(next@16.0.10)(react-dom@19.2.0)(react@19.2.0)
       common-tags: 1.8.2
-      convex: 1.30.0(react@19.2.0)
-      convex-helpers: 0.1.106(convex@1.30.0)(react@19.2.0)(typescript@5.9.3)(zod@3.25.76)
+      convex: 1.29.3(react@19.2.0)
+      convex-helpers: 0.1.106(convex@1.29.3)(react@19.2.0)(typescript@5.9.3)(zod@3.25.76)
       jose: 6.1.3
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
@@ -300,6 +303,25 @@ packages:
       - '@standard-schema/spec'
       - hono
       - typescript
+    dev: false
+
+  /@convex-dev/presence@0.3.0(convex@1.29.3)(react-dom@19.2.0)(react@19.2.0):
+    resolution: {integrity: sha512-adV+ao1L77u+egobyJabNwuai/0y/VgzMbqZiy+Q49JmX6fbSaiYg6FpFVACqPaq3giOfjrN2k+5mK2jTAUG0g==}
+    peerDependencies:
+      convex: ^1.24.8
+      expo-crypto: '>=14.1.0'
+      react: ~18.3.1 || ^19.0.0
+      react-dom: ~18.3.1 || ^19.0.0
+      react-native: '>=0.79.0'
+    peerDependenciesMeta:
+      expo-crypto:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      convex: 1.29.3(react@19.2.0)
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
     dev: false
 
   /@emnapi/core@1.7.1:
@@ -2633,7 +2655,7 @@ packages:
   /convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
-  /convex-helpers@0.1.106(convex@1.30.0)(react@19.2.0)(typescript@5.9.3)(zod@3.25.76):
+  /convex-helpers@0.1.106(convex@1.29.3)(react@19.2.0)(typescript@5.9.3)(zod@3.25.76):
     resolution: {integrity: sha512-hWRe3yDaAVHMe4CUYw1YoQLiPZ1KIx6Kbf0w6UcRDx1BXpJgMCl3GVIMiSeYiA0PkbwjnIwGWIvoUVKloG5Tyw==}
     hasBin: true
     peerDependencies:
@@ -2655,14 +2677,14 @@ packages:
       zod:
         optional: true
     dependencies:
-      convex: 1.30.0(react@19.2.0)
+      convex: 1.29.3(react@19.2.0)
       react: 19.2.0
       typescript: 5.9.3
       zod: 3.25.76
     dev: false
 
-  /convex@1.30.0(react@19.2.0):
-    resolution: {integrity: sha512-YvFFxLg3bICP7u5hSVxW6BUYgI4LkWJHdim+9XrXUkdyOziloiQ21EbSCq6NNG2ycba2x7hsgxUKCGAhJmkv1g==}
+  /convex@1.29.3(react@19.2.0):
+    resolution: {integrity: sha512-tg5TXzMjpNk9m50YRtdp6US+t7ckxE4E+7DNKUCjJ2MupQs2RBSPF/z5SNN4GUmQLSfg0eMILDySzdAvjTrhnw==}
     engines: {node: '>=18.0.0', npm: '>=7.0.0'}
     hasBin: true
     peerDependencies:
