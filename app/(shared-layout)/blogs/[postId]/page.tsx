@@ -3,7 +3,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
-import { fetchQuery } from 'convex/nextjs';
+import { fetchQuery, preloadQuery } from 'convex/nextjs';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,7 +17,10 @@ type PostIdProps = {
 export default async function PostIdRoute({ params }: PostIdProps) {
   const { postId } = await params;
 
-  const post = await fetchQuery(api.posts.getPostDetails, { postId });
+  const [post, preloadedComments] = await Promise.all([
+    await fetchQuery(api.posts.getPostDetails, { postId }),
+    await preloadQuery(api.comments.getCommentsByPostId, { postId }),
+  ]);
 
   if (!post) {
     return (
@@ -29,7 +32,7 @@ export default async function PostIdRoute({ params }: PostIdProps) {
     );
   }
   return (
-    <div className='max-w-3xl mx-auto py-8 animate-in fade-in duration-500 relative'>
+    <div className='max-w-3xl mx-auto py-8 animate-in fade-in duration-1000 relative'>
       <Link
         href='/blogs'
         className={buttonVariants({ variant: 'outline', className: 'mb-6' })}
@@ -59,7 +62,7 @@ export default async function PostIdRoute({ params }: PostIdProps) {
         {post.content}
       </p>
       <Separator className='my-8' />
-      <CommentSection />
+      <CommentSection preloadedComments={preloadedComments} />
     </div>
   );
 }
