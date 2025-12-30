@@ -4,10 +4,18 @@ import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { api } from '@/convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
-import { useQuery } from 'convex/react';
+import { Metadata } from 'next';
+// import { useQuery } from 'convex/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
+
+export const metadata: Metadata = {
+  title: 'Blogs | Next.js Convex App',
+  description: 'Read our latest articles and insights',
+  keywords: ['Blogs', 'Web Development', 'Next.js', 'Convex', 'React'],
+  authors: [{ name: 'The Web Architech', url: 'https://thewebarchitech.com' }],
+};
 
 export default async function BlogsPage() {
   // const data = useQuery(api.posts.getPosts);  // for client side data fetching
@@ -32,7 +40,6 @@ export default async function BlogsPage() {
 async function LoadBlogsList() {
   // await new Promise((resolve) => setTimeout(resolve, 5000));
   const data = await fetchQuery(api.posts.getPosts);
-  console.log(data);
 
   return (
     <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>

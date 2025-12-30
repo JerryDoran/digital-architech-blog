@@ -1,10 +1,13 @@
 import CommentSection from '@/components/shared/comment-section';
+import PostPresence from '@/components/shared/post-presence';
 import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
+import { getToken } from '@/lib/auth-server';
 import { fetchQuery, preloadQuery } from 'convex/nextjs';
 import { ArrowLeft } from 'lucide-react';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -14,12 +17,37 @@ type PostIdProps = {
   }>;
 };
 
+export async function generateMetadata({
+  params,
+}: PostIdProps): Promise<Metadata> {
+  const { postId } = await params;
+  const post = await fetchQuery(api.posts.getPostDetails, { postId });
+
+  if (!post) {
+    return {
+      title: 'Post Not Found | Next.js Convex App',
+      description: 'The requested blog post was not found.',
+    };
+  }
+
+  return {
+    title: post.title,
+    description: post.content.slice(0, 160),
+    keywords: ['Blog Post', `${post.title}`, 'Small business'],
+    authors: [
+      { name: 'The Web Architech', url: 'https://thewebarchitech.com' },
+    ],
+  };
+}
+
 export default async function PostIdRoute({ params }: PostIdProps) {
   const { postId } = await params;
+  const token = await getToken();
 
-  const [post, preloadedComments] = await Promise.all([
+  const [post, preloadedComments, userId] = await Promise.all([
     await fetchQuery(api.posts.getPostDetails, { postId }),
     await preloadQuery(api.comments.getCommentsByPostId, { postId }),
+    await fetchQuery(api.presence.getUserId, {}, { token }), // Preload user ID for presence
   ]);
 
   if (!post) {
@@ -53,9 +81,12 @@ export default async function PostIdRoute({ params }: PostIdProps) {
       </div>
       <div className='space-y-4 flex flex-col'>
         <h1 className='text-4xl font-bold'>{post.title}</h1>
-        <p className='text-sm text-muted-foreground'>
-          Posted on {new Date(post._creationTime).toLocaleDateString()}
-        </p>
+        <div className='flex items-center gap-4'>
+          <p className='text-sm text-muted-foreground'>
+            Posted on {new Date(post._creationTime).toLocaleDateString()}
+          </p>
+          {userId && <PostPresence roomId={post._id} userId={userId} />}
+        </div>
       </div>
       <Separator className='my-8' />
       <p className='text-lg leading-relaxed text-foreground/90 whitespace-pre-wrap'>
