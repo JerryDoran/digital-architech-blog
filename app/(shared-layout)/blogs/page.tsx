@@ -10,6 +10,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+export const dynamic = 'force-static';
+export const revalidate = 60; // Revalidate every 60 seconds
+
 export const metadata: Metadata = {
   title: 'Blogs | Next.js Convex App',
   description: 'Read our latest articles and insights',

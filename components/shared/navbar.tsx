@@ -104,7 +104,7 @@ export function Navbar() {
             Logout
           </Button>
         ) : (
-          <>
+          <div>
             <Link href='/auth/sign-up' className={buttonVariants()}>
               Sign Up
             </Link>
@@ -114,7 +114,7 @@ export function Navbar() {
             >
               Login
             </Link>
-          </>
+          </div>
         )}
         <ThemeToggle />
       </div>

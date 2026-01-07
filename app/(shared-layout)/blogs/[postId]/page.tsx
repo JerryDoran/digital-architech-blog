@@ -1,15 +1,17 @@
+import { getToken } from '@/lib/auth-server';
+import { fetchQuery, preloadQuery } from 'convex/nextjs';
+import { ArrowLeft } from 'lucide-react';
+import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
+
 import CommentSection from '@/components/shared/comment-section';
 import PostPresence from '@/components/shared/post-presence';
 import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
-import { getToken } from '@/lib/auth-server';
-import { fetchQuery, preloadQuery } from 'convex/nextjs';
-import { ArrowLeft } from 'lucide-react';
-import { Metadata } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
 
 type PostIdProps = {
   params: Promise<{
@@ -49,6 +51,11 @@ export default async function PostIdRoute({ params }: PostIdProps) {
     await preloadQuery(api.comments.getCommentsByPostId, { postId }),
     await fetchQuery(api.presence.getUserId, {}, { token }), // Preload user ID for presence
   ]);
+
+  // Multi-layered auth check - checks proxy then per-page
+  if (!userId) {
+    return redirect('/auth/login');
+  }
 
   if (!post) {
     return (
