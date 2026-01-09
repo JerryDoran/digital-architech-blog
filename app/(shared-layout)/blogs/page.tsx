@@ -5,13 +5,14 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { api } from '@/convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import { Metadata } from 'next';
+import { cacheLife, cacheTag } from 'next/cache';
 // import { useQuery } from 'convex/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-export const dynamic = 'force-static';
-export const revalidate = 60; // Revalidate every 60 seconds
+// export const dynamic = 'force-static';
+// export const revalidate = 60; // Revalidate every 60 seconds
 
 export const metadata: Metadata = {
   title: 'Blogs | Next.js Convex App',
@@ -33,15 +34,19 @@ export default async function BlogsPage() {
           Insights, thoughts and trends from our team!
         </p>
       </div>
-      <Suspense fallback={<BlogSkeletonLoader />}>
-        <LoadBlogsList />
-      </Suspense>
+      {/* <Suspense fallback={<BlogSkeletonLoader />}> */}
+      <LoadBlogsList />
+      {/* </Suspense> */}
     </div>
   );
 }
 
 async function LoadBlogsList() {
   // await new Promise((resolve) => setTimeout(resolve, 5000));
+  'use cache';
+  cacheLife('hours');
+  cacheTag('blogs');
+
   const data = await fetchQuery(api.posts.getPosts);
 
   return (
